@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Equora Energy — Battery Storage, Powered by AI</title>
+  <style>
+    /* ── RESET & BASE ─────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    /* ── TOKENS ───────────────────────────────────────────────────── */
+    :root {
+      --navy-900: #010D26;
+      --navy-800: #011a40;
+      --navy-700: #022859;
+      --navy-600: #033470;
+      --navy-400: #0455BF;
+      --teal-500: #0455BF;
+      --teal-400: #0487D9;
+      --teal-300: #CEE8F2;
+      --white:    #ffffff;
+      --gray-100: #e8f4fb;
+      --gray-200: #CEE8F2;
+      --gray-400: #8ab8d4;
+      --gray-500: #5a8faa;
+      --font-head: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      --font-body: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+      --max-w: 1160px;
+      --section-pad: 96px 24px;
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--navy-800);
+      color: var(--white);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── UTILITIES ────────────────────────────────────────────────── */
+    .container { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+    .teal { color: var(--teal-400); }
+    .muted { color: var(--gray-400); }
+    .badge {
+      display: inline-block;
+      background: rgba(4,135,217,.15);
+      color: var(--teal-300);
+      border: 1px solid rgba(4,135,217,.3);
+      padding: 4px 14px;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .section-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      color: var(--teal-400);
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      max-width: 48px;
+      height: 2px;
+      background: var(--teal-400);
+      border-radius: 2px;
+    }
+
+    /* ── NAV ──────────────────────────────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(7,17,28,.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .nav-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, var(--teal-500), var(--teal-400));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-logo-icon svg { width: 18px; height: 18px; }
+    .nav-logo span {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--white);
+      letter-spacing: -.01em;
+    }
+    .nav-logo em {
+      font-style: normal;
+      color: var(--teal-400);
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      background: var(--teal-500);
+      color: var(--white) !important;
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-weight: 600 !important;
+      font-size: .875rem;
+      transition: background .2s !important;
+    }
+    .nav-cta:hover { background: var(--teal-400) !important; color: var(--white) !important; }
+
+    /* ── HERO ─────────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 100px 24px 80px;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(4,85,191,.18) 0%, transparent 70%),
+                  var(--navy-900);
+    }
+    .hero-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(4,135,217,.07) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(4,135,217,.07) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 80%);
+    }
+    .hero-content {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .hero-dot {
+      width: 8px; height: 8px;
+      background: var(--teal-400);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: .5; transform: scale(.7); }
+    }
+    .hero-eyebrow span {
+      font-size: .82rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--teal-300);
+    }
+    .hero-title {
+      font-size: clamp(2.6rem, 5.5vw, 4.4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -.03em;
+      margin-bottom: 24px;
+      max-width: 800px;
+    }
+    .hero-title .accent {
+      background: linear-gradient(90deg, var(--teal-400), var(--teal-300));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--gray-400);
+      max-width: 560px;
+      margin-bottom: 40px;
+      line-height: 1.7;
+    }
+    .hero-pillars {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 48px;
+    }
+    .pillar-chip {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.1);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-size: .85rem;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--gray-200);
+      transition: border-color .2s, background .2s;
+    }
+    .pillar-chip .num {
+      color: var(--teal-400);
+      font-size: .75rem;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 72px;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--teal-500);
+      color: var(--white);
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: .95rem;
+      text-decoration: none;
+      transition: background .2s, transform .15s;
+    }
+    .btn-primary:hover { background: var(--teal-400); transform: translateY(-1px); }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--gray-200);
+      padding: 14px 28px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,.15);
+      font-weight: 600;
+      font-size: .95rem;
+      text-decoration: none;
+      transition: border-color .2s, color .2s;
+    }
+    .btn-ghost:hover { border-color: var(--teal-400); color: var(--white); }
+    .hero-stats {
+      display: flex;
+      gap: 0;
+      flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 40px;
+    }
+    .hero-stat {
+      flex: 1;
+      min-width: 160px;
+      padding-right: 40px;
+    }
+    .hero-stat:not(:last-child) {
+      border-right: 1px solid rgba(255,255,255,.08);
+      margin-right: 40px;
+    }
+    .hero-stat-val {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -.03em;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .hero-stat-val span { color: var(--teal-400); }
+    .hero-stat-label {
+      font-size: .8rem;
+      color: var(--gray-400);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* ── MARKET ───────────────────────────────────────────────────── */
+    #market {
+      padding: var(--section-pad);
+      background: var(--navy-800);
+    }
+    .market-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+      margin-top: 52px;
+    }
+    .market-heading {
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .market-body {
+      color: var(--gray-400);
+      font-size: 1rem;
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+    .market-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .market-bullets li {
+      display: flex;
+      gap: 12px;
+      font-size: .93rem;
+      color: var(--gray-200);
+      line-height: 1.6;
+    }
+    .market-bullets li::before {
+      content: '';
+      width: 6px; height: 6px;
+      min-width: 6px;
+      background: var(--teal-400);
+      border-radius: 50%;
+      margin-top: 8px;
+    }
+    .market-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .mcard {
+      background: var(--navy-700);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      padding: 24px 20px;
+    }
+    .mcard-val {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -.03em;
+      margin-bottom: 6px;
+    }
+    .mcard-val em { font-style: normal; color: var(--teal-400); }
+    .mcard-label {
+      font-size: .8rem;
+      color: var(--gray-400);
+      line-height: 1.4;
+    }
+    .mcard-sub {
+      font-size: .72rem;
+      color: var(--gray-500);
+      margin-top: 4px;
+    }
+
+    /* ── PLATFORM ─────────────────────────────────────────────────── */
+    #platform {
+      padding: var(--section-pad);
+      background: var(--navy-900);
+    }
+    .platform-header {
+      text-align: center;
+      max-width: 640px;
+      margin: 0 auto 60px;
+    }
+    .platform-header h2 {
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -.025em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .platform-header p {
+      color: var(--gray-400);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+    .platform-pillars {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      background: rgba(255,255,255,.04);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.07);
+    }
+    .pp {
+      background: var(--navy-800);
+      padding: 36px 24px;
+      position: relative;
+      transition: background .2s;
+    }
+    .pp:hover { background: var(--navy-700); }
+    .pp-num {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      color: var(--teal-400);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .pp-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      color: var(--white);
+    }
+    .pp-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .pp-items li {
+      font-size: .83rem;
+      color: var(--gray-400);
+      line-height: 1.5;
+      padding-left: 14px;
+      position: relative;
+    }
+    .pp-items li::before {
+      content: '›';
+      position: absolute;
+      left: 0;
+      color: var(--teal-500);
+      font-weight: 700;
+    }
+
+    /* ── AI ───────────────────────────────────────────────────────── */
+    #ai {
+      padding: var(--section-pad);
+      background: linear-gradient(180deg, var(--navy-800) 0%, var(--navy-900) 100%);
+    }
+    .ai-header {
+      max-width: 640px;
+      margin-bottom: 56px;
+    }
+    .ai-header h2 {
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -.025em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .ai-header p { color: var(--gray-400); font-size: 1rem; line-height: 1.7; }
+    .ai-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .ai-card {
+      background: var(--navy-700);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s, transform .2s;
+    }
+    .ai-card:hover { border-color: rgba(4,135,217,.3); transform: translateY(-2px); }
+    .ai-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--teal-500), var(--teal-300));
+    }
+    .ai-card-stage {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--teal-400);
+      margin-bottom: 10px;
+    }
+    .ai-card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--white);
+    }
+    .ai-card-body {
+      font-size: .88rem;
+      color: var(--gray-400);
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .ai-metric {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 6px;
+      background: rgba(4,135,217,.1);
+      border: 1px solid rgba(4,135,217,.2);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+    }
+    .ai-metric-val {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--teal-300);
+      letter-spacing: -.02em;
+    }
+    .ai-metric-label { font-size: .75rem; color: var(--gray-400); }
+
+    /* ── SEGMENT ──────────────────────────────────────────────────── */
+    #segment {
+      padding: var(--section-pad);
+      background: var(--navy-800);
+    }
+    .seg-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 64px;
+      align-items: start;
+      margin-top: 52px;
+    }
+    .seg-heading {
+      font-size: clamp(1.7rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      line-height: 1.2;
+      margin-bottom: 20px;
+    }
+    .seg-body { color: var(--gray-400); font-size: .95rem; line-height: 1.75; margin-bottom: 28px; }
+    .seg-points { list-style: none; display: flex; flex-direction: column; gap: 18px; }
+    .seg-point {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .seg-point-icon {
+      width: 36px; height: 36px;
+      min-width: 36px;
+      border-radius: var(--radius-sm);
+      background: rgba(4,135,217,.12);
+      border: 1px solid rgba(4,135,217,.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .95rem;
+    }
+    .seg-point-text h4 {
+      font-size: .92rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--white);
+    }
+    .seg-point-text p { font-size: .84rem; color: var(--gray-400); line-height: 1.55; }
+    /* comparison table */
+    .comp-table {
+      background: var(--navy-700);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .comp-table table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .83rem;
+    }
+    .comp-table thead tr {
+      background: var(--navy-600);
+    }
+    .comp-table th {
+      padding: 12px 14px;
+      text-align: left;
+      font-weight: 700;
+      font-size: .75rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--gray-400);
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .comp-table th.highlight { color: var(--teal-300); }
+    .comp-table td {
+      padding: 11px 14px;
+      color: var(--gray-200);
+      border-bottom: 1px solid rgba(255,255,255,.04);
+    }
+    .comp-table tr:last-child td { border-bottom: none; }
+    .comp-table td:first-child { color: var(--gray-400); font-size: .8rem; }
+    .comp-table td.highlight { color: var(--teal-300); font-weight: 600; }
+    .comp-table tr.active-row { background: rgba(4,135,217,.06); }
+    .stars { letter-spacing: 1px; }
+    .star-on { color: var(--teal-400); }
+    .star-off { color: var(--navy-400); }
+
+    /* ── GEOGRAPHY ────────────────────────────────────────────────── */
+    #geography {
+      padding: var(--section-pad);
+      background: var(--navy-900);
+    }
+    .geo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 52px;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .geo-header h2 {
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -.025em;
+      line-height: 1.2;
+      max-width: 500px;
+    }
+    .geo-target {
+      text-align: right;
+    }
+    .geo-target-val {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--teal-400);
+      letter-spacing: -.04em;
+      line-height: 1;
+    }
+    .geo-target-label {
+      font-size: .8rem;
+      color: var(--gray-400);
+      margin-top: 4px;
+    }
+    .geo-markets {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .geo-card {
+      background: var(--navy-700);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      padding: 28px 22px;
+      transition: border-color .2s;
+    }
+    .geo-card:hover { border-color: rgba(4,135,217,.25); }
+    .geo-card-flag {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+    .geo-card-country {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .geo-status {
+      display: inline-block;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+    }
+    .geo-status.operational {
+      background: rgba(4,135,217,.15);
+      color: var(--teal-300);
+      border: 1px solid rgba(4,135,217,.25);
+    }
+    .geo-status.pipeline {
+      background: rgba(255,255,255,.06);
+      color: var(--gray-400);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+    .geo-status.developing {
+      background: rgba(255,200,60,.08);
+      color: #ffd97d;
+      border: 1px solid rgba(255,200,60,.2);
+    }
+    .geo-card-desc {
+      font-size: .83rem;
+      color: var(--gray-400);
+      line-height: 1.55;
+    }
+
+    /* ── INVESTMENT ───────────────────────────────────────────────── */
+    #investment {
+      padding: var(--section-pad);
+      background: var(--navy-800);
+    }
+    .inv-header { max-width: 600px; margin-bottom: 56px; }
+    .inv-header h2 {
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -.025em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .inv-header p { color: var(--gray-400); font-size: 1rem; line-height: 1.7; }
+    .inv-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .inv-metric {
+      background: var(--navy-700);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+    }
+    .inv-metric-val {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -.03em;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .inv-metric-val em { font-style: normal; color: var(--teal-400); }
+    .inv-metric-name {
+      font-size: .82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--gray-400);
+      margin-bottom: 6px;
+    }
+    .inv-metric-sub { font-size: .78rem; color: var(--gray-500); line-height: 1.45; }
+    .inv-bottom {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .inv-tag {
+      background: var(--navy-700);
+      border: 1px solid rgba(255,255,255,.07);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .inv-tag-icon {
+      width: 40px; height: 40px;
+      min-width: 40px;
+      border-radius: var(--radius-sm);
+      background: rgba(4,135,217,.12);
+      border: 1px solid rgba(4,135,217,.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .inv-tag-text h4 { font-size: .88rem; font-weight: 700; margin-bottom: 3px; }
+    .inv-tag-text p { font-size: .78rem; color: var(--gray-400); line-height: 1.4; }
+
+    /* ── PARTNERS ─────────────────────────────────────────────────── */
+    #partners {
+      padding: var(--section-pad);
+      background: var(--navy-900);
+    }
+    .partners-header {
+      text-align: center;
+      max-width: 560px;
+      margin: 0 auto 56px;
+    }
+    .partners-header h2 {
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -.025em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+    .partners-header p { color: var(--gray-400); font-size: 1rem; line-height: 1.7; }
+    .partners-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2px;
+      background: rgba(255,255,255,.04);
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.07);
+    }
+    .partner-col {
+      background: var(--navy-800);
+      padding: 28px 20px;
+    }
+    .partner-col-title {
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--teal-400);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .partner-items { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .partner-items li { font-size: .8rem; color: var(--gray-300); line-height: 1.45; }
+
+    /* ── CONTACT ──────────────────────────────────────────────────── */
+    #contact {
+      padding: var(--section-pad);
+      background: radial-gradient(ellipse 70% 60% at 50% 100%, rgba(4,135,217,.1) 0%, transparent 70%),
+                  var(--navy-900);
+    }
+    .contact-inner {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .contact-inner h2 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      letter-spacing: -.03em;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+    .contact-inner p {
+      color: var(--gray-400);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 40px;
+    }
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--navy-700);
+      border: 1px solid rgba(255,255,255,.1);
+      padding: 14px 24px;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      color: var(--gray-200);
+      font-size: .9rem;
+      font-weight: 500;
+      transition: border-color .2s, color .2s;
+    }
+    .contact-link:hover { border-color: var(--teal-400); color: var(--white); }
+    .contact-link svg { width: 18px; height: 18px; opacity: .7; }
+    .contact-loc {
+      font-size: .82rem;
+      color: var(--gray-500);
+    }
+
+    /* ── FOOTER ───────────────────────────────────────────────────── */
+    footer {
+      background: var(--navy-900);
+      border-top: 1px solid rgba(255,255,255,.06);
+      padding: 28px 24px;
+    }
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-inner p {
+      font-size: .8rem;
+      color: var(--gray-500);
+    }
+    .footer-disc {
+      font-size: .72rem;
+      color: var(--gray-500);
+      text-align: right;
+      max-width: 500px;
+      line-height: 1.5;
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .platform-pillars { grid-template-columns: repeat(2, 1fr); }
+      .partners-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 768px) {
+      :root { --section-pad: 64px 20px; }
+      .nav-links { display: none; }
+      .market-grid, .seg-grid { grid-template-columns: 1fr; gap: 40px; }
+      .market-cards { grid-template-columns: 1fr 1fr; }
+      .ai-grid { grid-template-columns: 1fr; }
+      .geo-markets { grid-template-columns: 1fr 1fr; }
+      .inv-metrics, .inv-bottom { grid-template-columns: 1fr 1fr; }
+      .platform-pillars { grid-template-columns: 1fr; }
+      .partners-grid { grid-template-columns: 1fr 1fr; }
+      .geo-header { flex-direction: column; align-items: flex-start; }
+      .geo-target { text-align: left; }
+    }
+    @media (max-width: 480px) {
+      .hero-stats { flex-direction: column; gap: 24px; }
+      .hero-stat:not(:last-child) { border-right: none; margin-right: 0; border-bottom: 1px solid rgba(255,255,255,.08); padding-bottom: 24px; }
+      .market-cards, .geo-markets, .inv-metrics, .inv-bottom { grid-template-columns: 1fr; }
+      .partners-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ──────────────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 18 18" fill="none">
+          <path d="M9 2L14 7H11V11H7V7H4L9 2Z" fill="white"/>
+          <path d="M5 13H13V15H5V13Z" fill="white" opacity=".7"/>
+        </svg>
+      </div>
+      <span>Equora <em>Energy</em></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#market">Market</a></li>
+      <li><a href="#platform">Platform</a></li>
+      <li><a href="#ai">AI Edge</a></li>
+      <li><a href="#segment">Why Medium-Scale</a></li>
+      <li><a href="#geography">Markets</a></li>
+      <li><a href="#investment">Returns</a></li>
+      <li><a href="#contact" class="nav-cta">Get in Touch</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ── HERO ─────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="hero-dot"></div>
+      <span>Battery Energy Storage Systems · Powered by AI</span>
+    </div>
+    <h1 class="hero-title">
+      The full-lifecycle platform<br>for <span class="accent">medium-scale BESS</span>
+    </h1>
+    <p class="hero-sub">
+      We develop, finance, operate and optimize medium-sized battery assets across Europe — using proprietary AI to compress timelines, sharpen decisions, and maximize revenue.
+    </p>
+    <div class="hero-pillars">
+      <div class="pillar-chip"><span class="num">01</span> Develop</div>
+      <div class="pillar-chip"><span class="num">02</span> Finance</div>
+      <div class="pillar-chip"><span class="num">03</span> Operate</div>
+      <div class="pillar-chip"><span class="num">04</span> Optimize</div>
+    </div>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4l6 5 6-5M2 4h12v9H2V4z" stroke="white" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        Get in Touch
+      </a>
+      <a href="#platform" class="btn-ghost">
+        Explore the Platform
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-val">800<span>+ MW</span></div>
+        <div class="hero-stat-label">Target portfolio<br>by 2030</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">7<span>–</span>12<span>%</span></div>
+        <div class="hero-stat-label">Target equity IRR<br>across revenue stacks</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">4<span>+</span></div>
+        <div class="hero-stat-label">European markets<br>with active pipeline</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">€0.25<span>mn</span></div>
+        <div class="hero-stat-label">CAPEX per MWh via<br>direct OEM partnerships</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MARKET ────────────────────────────────────────────────────── -->
+<section id="market">
+  <div class="container">
+    <div class="section-label">Market Opportunity</div>
+    <div class="market-grid">
+      <div>
+        <h2 class="market-heading">Europe's battery storage market is entering a rapid-growth phase</h2>
+        <p class="market-body">
+          Wind and solar will supply more than 70% of new EU generation by 2030 — and storage is the only scalable fix to intermittency. Grid operators across Europe are actively paying record premiums for battery flexibility through FCR, aFRR and capacity markets.
+        </p>
+        <ul class="market-bullets">
+          <li>RES capacity growing from ~500 GW today to <strong>~900 GW by 2030</strong>, driving a structural need for balancing infrastructure</li>
+          <li>Annual BESS investment needed reaches <strong>€15bn+ per year</strong> — the market is nowhere near supplied</li>
+          <li>European installed BESS capacity growing at <strong>35%+ CAGR</strong> through the decade</li>
+          <li>Medium-scale 10–50 MW projects permit faster, achieve better grid access rates and face far less competition than utility-scale</li>
+        </ul>
+      </div>
+      <div class="market-cards">
+        <div class="mcard">
+          <div class="mcard-val">~900 <em>GW</em></div>
+          <div class="mcard-label">RES capacity in Europe by 2030</div>
+          <div class="mcard-sub">vs. ~500 GW today</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-val">€15<em>bn+</em></div>
+          <div class="mcard-label">Annual BESS investment needed by 2030</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-val">35<em>%+</em></div>
+          <div class="mcard-label">p.a. CAGR in European installed BESS capacity</div>
+        </div>
+        <div class="mcard">
+          <div class="mcard-val">7–12<em>%</em></div>
+          <div class="mcard-label">Target equity IRR for well-operated BESS</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PLATFORM ──────────────────────────────────────────────────── -->
+<section id="platform">
+  <div class="container">
+    <div class="platform-header">
+      <div class="section-label" style="justify-content:center">Our Platform</div>
+      <h2>We own the entire value chain — from site selection to daily revenue optimization</h2>
+      <p>Four integrated capabilities, working together. No hand-offs, no information loss between stages.</p>
+    </div>
+    <div class="platform-pillars">
+      <div class="pp">
+        <div class="pp-num">Stage 01</div>
+        <div class="pp-title">Develop</div>
+        <ul class="pp-items">
+          <li>Proprietary site screening across European grids</li>
+          <li>AI-assisted substation ranking &amp; connection analysis</li>
+          <li>Deep local permitting and regulatory expertise</li>
+          <li>Brownfield and greenfield project sourcing</li>
+        </ul>
+      </div>
+      <div class="pp">
+        <div class="pp-num">Stage 02</div>
+        <div class="pp-title">Finance</div>
+        <ul class="pp-items">
+          <li>Structured debt and equity solutions</li>
+          <li>Subsidy and grant capture (national &amp; EU)</li>
+          <li>Bank-ready financial modelling</li>
+          <li>Co-investment and co-ownership structures</li>
+        </ul>
+      </div>
+      <div class="pp">
+        <div class="pp-num">Stage 03</div>
+        <div class="pp-title">Operate</div>
+        <ul class="pp-items">
+          <li>24/7 remote monitoring &amp; dispatch</li>
+          <li>EPC delivery with vetted contractors</li>
+          <li>OEM partnerships for competitive CAPEX</li>
+          <li>Regulatory compliance across markets</li>
+        </ul>
+      </div>
+      <div class="pp">
+        <div class="pp-num">Stage 04</div>
+        <div class="pp-title">Optimize</div>
+        <ul class="pp-items">
+          <li>AI-driven multi-market revenue stacking</li>
+          <li>Real-time trading: FCR, aFRR, spot, intraday</li>
+          <li>Predictive battery degradation management</li>
+          <li>Continuous performance benchmarking</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AI ────────────────────────────────────────────────────────── -->
+<section id="ai">
+  <div class="container">
+    <div class="ai-header">
+      <div class="section-label">AI &amp; Automation</div>
+      <h2>AI and automation are our competitive edge — at every stage</h2>
+      <p>Where most operators rely on manual processes and static models, Equora deploys purpose-built AI tools that compress timelines, sharpen decisions and maximize revenue — continuously.</p>
+    </div>
+    <div class="ai-grid">
+      <div class="ai-card">
+        <div class="ai-card-stage">Develop</div>
+        <div class="ai-card-title">Proprietary Grid Analysis Engine</div>
+        <div class="ai-card-body">Automatically ranks grid connection points across European substations by capacity availability, demand forecasts and strategic fit — replacing weeks of manual research with minutes.</div>
+        <div class="ai-metric">
+          <span class="ai-metric-val">10×</span>
+          <span class="ai-metric-label">faster site screening</span>
+        </div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-stage">Develop / Finance</div>
+        <div class="ai-card-title">AI-Powered Document Extraction</div>
+        <div class="ai-card-body">Consolidates and structures project data from PDFs, emails, Excel and legal documents. Eliminates manual review bottlenecks and auto-generates investor-ready VDR packages.</div>
+        <div class="ai-metric">
+          <span class="ai-metric-val">80%</span>
+          <span class="ai-metric-label">reduction in DD prep time</span>
+        </div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-stage">Optimize</div>
+        <div class="ai-card-title">Multi-Market Revenue Optimizer</div>
+        <div class="ai-card-body">Real-time dispatch algorithm stacks revenues across FCR, aFRR, spot, intraday and capacity markets simultaneously — adapting to price signals faster than any human trader.</div>
+        <div class="ai-metric">
+          <span class="ai-metric-val">+25%</span>
+          <span class="ai-metric-label">revenue vs. single-market dispatch</span>
+        </div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-stage">Operate</div>
+        <div class="ai-card-title">Predictive Asset Health Monitor</div>
+        <div class="ai-card-body">Machine-learning model continuously tracks battery degradation, thermal patterns and cycle efficiency — enabling proactive maintenance and extending asset lifespan beyond standard projections.</div>
+        <div class="ai-metric">
+          <span class="ai-metric-val">+3–5 yr</span>
+          <span class="ai-metric-label">extended asset lifetime</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SEGMENT ───────────────────────────────────────────────────── -->
+<section id="segment">
+  <div class="container">
+    <div class="section-label">Why Medium-Scale</div>
+    <div class="seg-grid">
+      <div>
+        <h2 class="seg-heading">10–50 MW is the most attractive segment — and our home turf</h2>
+        <p class="seg-body">Medium-scale projects systematically outperform on the metrics that matter: permitting speed, grid connection rates, revenue per MW, and risk diversification — while still delivering the portfolio scale investors need.</p>
+        <ul class="seg-points">
+          <li class="seg-point">
+            <div class="seg-point-icon">⚡</div>
+            <div class="seg-point-text">
+              <h4>Faster permitting, higher success rates</h4>
+              <p>Smaller projects navigate regulatory processes 2–3× faster than assets over 50 MW, with materially higher grid connection approval rates.</p>
+            </div>
+          </li>
+          <li class="seg-point">
+            <div class="seg-point-icon">🎯</div>
+            <div class="seg-point-text">
+              <h4>Better grid positioning, less congestion</h4>
+              <p>Access to a wider range of grid nodes avoids the revenue compression that plagues large projects at overcrowded substations.</p>
+            </div>
+          </li>
+          <li class="seg-point">
+            <div class="seg-point-icon">🧩</div>
+            <div class="seg-point-text">
+              <h4>Bundling creates scale without the risk</h4>
+              <p>Aggregating multiple 10–30 MW projects delivers investor-grade scale while individual project risk stays contained. A single permitting failure doesn't kill the program.</p>
+            </div>
+          </li>
+          <li class="seg-point">
+            <div class="seg-point-icon">🌍</div>
+            <div class="seg-point-text">
+              <h4>Proven across European markets</h4>
+              <p>Active projects and pipeline in Germany, Poland, the Nordics and beyond — with operational experience managing multiple regulatory regimes simultaneously.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div>
+        <div class="comp-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Small &lt;10 MW</th>
+                <th class="highlight">Medium 10–50 MW</th>
+                <th>Large &gt;50 MW</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="active-row">
+                <td>Permitting speed</td>
+                <td><span class="stars"><span class="star-on">★★★★</span></span></td>
+                <td class="highlight"><span class="stars">★★★★</span></td>
+                <td><span class="stars"><span class="star-on">★★</span><span class="star-off">★★★</span></span></td>
+              </tr>
+              <tr class="active-row">
+                <td>Grid connection rate</td>
+                <td><span class="stars"><span class="star-on">★★★</span><span class="star-off">★★</span></span></td>
+                <td class="highlight"><span class="stars">★★★★</span></td>
+                <td><span class="stars"><span class="star-on">★★</span><span class="star-off">★★★</span></span></td>
+              </tr>
+              <tr class="active-row">
+                <td>Revenue / MW</td>
+                <td><span class="stars"><span class="star-on">★★★</span><span class="star-off">★★</span></span></td>
+                <td class="highlight"><span class="stars">★★★★</span></td>
+                <td><span class="stars"><span class="star-on">★★★</span><span class="star-off">★★</span></span></td>
+              </tr>
+              <tr class="active-row">
+                <td>Scalability</td>
+                <td><span class="stars"><span class="star-on">★★</span><span class="star-off">★★★</span></span></td>
+                <td class="highlight"><span class="stars">★★★★</span></td>
+                <td><span class="stars">★★★★</span></td>
+              </tr>
+              <tr class="active-row">
+                <td>Risk diversification</td>
+                <td><span class="stars"><span class="star-on">★★</span><span class="star-off">★★★</span></span></td>
+                <td class="highlight"><span class="stars">★★★★★</span></td>
+                <td><span class="stars"><span class="star-on">★★</span><span class="star-off">★★★</span></span></td>
+              </tr>
+              <tr class="active-row">
+                <td>Financing access</td>
+                <td><span class="stars"><span class="star-on">★★</span><span class="star-off">★★★</span></span></td>
+                <td class="highlight"><span class="stars">★★★★</span></td>
+                <td><span class="stars">★★★★</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin-top:12px; font-size:.72rem; color:var(--gray-500);">★ = Relative rating vs. segment peers. Source: BloombergNEF, Wood Mackenzie, Eurelectric — Indicative</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GEOGRAPHY ─────────────────────────────────────────────────── -->
+<section id="geography">
+  <div class="container">
+    <div class="geo-header">
+      <div>
+        <div class="section-label">Geographic Presence</div>
+        <h2>Active pipeline across key European markets</h2>
+      </div>
+      <div class="geo-target">
+        <div class="geo-target-val">800+ MW</div>
+        <div class="geo-target-label">target operating by 2030</div>
+      </div>
+    </div>
+    <div class="geo-markets">
+      <div class="geo-card">
+        <div class="geo-card-flag">🇩🇪🇨🇭</div>
+        <div class="geo-card-country">Switzerland + Germany</div>
+        <div class="geo-status operational">Operational + Pipeline</div>
+        <p class="geo-card-desc">Core markets. Active projects in operation, strong DSO relationships, largest near-term pipeline. HQ locations.</p>
+      </div>
+      <div class="geo-card">
+        <div class="geo-card-flag">🇵🇱</div>
+        <div class="geo-card-country">Poland</div>
+        <div class="geo-status pipeline">Pipeline</div>
+        <p class="geo-card-desc">Fast-growing storage market. Proprietary project sourcing network and strong regulatory tailwinds.</p>
+      </div>
+      <div class="geo-card">
+        <div class="geo-card-flag">🇸🇪🇳🇴🇫🇮</div>
+        <div class="geo-card-country">Nordics</div>
+        <div class="geo-status pipeline">Pipeline</div>
+        <p class="geo-card-desc">High FCR/aFRR revenues and supportive grid conditions for medium-scale BESS deployment.</p>
+      </div>
+      <div class="geo-card">
+        <div class="geo-card-flag">🇧🇪🇳🇱🇦🇹</div>
+        <div class="geo-card-country">Benelux / Austria</div>
+        <div class="geo-status developing">Developing</div>
+        <p class="geo-card-desc">Strong balancing market premiums. Targeted expansion via existing partner networks.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── INVESTMENT ────────────────────────────────────────────────── -->
+<section id="investment">
+  <div class="container">
+    <div class="inv-header">
+      <div class="section-label">Investment Highlights</div>
+      <h2>Predictable returns backed by diversified revenue</h2>
+      <p>A portfolio built on contracted cash flows, multi-market revenue stacking, and AI-extended asset lifetimes — designed for institutional and co-investing partners.</p>
+    </div>
+    <div class="inv-metrics">
+      <div class="inv-metric">
+        <div class="inv-metric-val">10–50 <em>MW</em></div>
+        <div class="inv-metric-name">Target Project Size</div>
+        <div class="inv-metric-sub">Sweet-spot for permitting, grid access and economics</div>
+      </div>
+      <div class="inv-metric">
+        <div class="inv-metric-val">7–12<em>%</em></div>
+        <div class="inv-metric-name">Target Equity IRR</div>
+        <div class="inv-metric-sub">Across FCR, aFRR, spot and capacity revenue stacks</div>
+      </div>
+      <div class="inv-metric">
+        <div class="inv-metric-val">~€0.25<em>mn</em></div>
+        <div class="inv-metric-name">CAPEX per MWh</div>
+        <div class="inv-metric-sub">Competitive procurement via direct OEM partnerships</div>
+      </div>
+    </div>
+    <div class="inv-bottom">
+      <div class="inv-tag">
+        <div class="inv-tag-icon">🔋</div>
+        <div class="inv-tag-text">
+          <h4>12–15 yr Asset Lifetime</h4>
+          <p>Extended by AI-driven predictive maintenance and degradation management</p>
+        </div>
+      </div>
+      <div class="inv-tag">
+        <div class="inv-tag-icon">🌍</div>
+        <div class="inv-tag-text">
+          <h4>Multi-Market Revenue</h4>
+          <p>FCR · aFRR · intraday · spot · capacity payments across 4+ European markets</p>
+        </div>
+      </div>
+      <div class="inv-tag">
+        <div class="inv-tag-icon">📈</div>
+        <div class="inv-tag-text">
+          <h4>800+ MW by 2030</h4>
+          <p>Disciplined portfolio build-out across Germany, Poland, Nordics and Benelux</p>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:20px; font-size:.75rem; color:var(--gray-500);">All figures indicative. IRR based on base-case revenue modelling. Past performance is not indicative of future results.</p>
+  </div>
+</section>
+
+<!-- ── PARTNERS ──────────────────────────────────────────────────── -->
+<section id="partners">
+  <div class="container">
+    <div class="partners-header">
+      <div class="section-label" style="justify-content:center">Ecosystem</div>
+      <h2>End-to-end partnerships across the full BESS value chain</h2>
+      <p>We partner with best-in-class players at every stage — so our investors don't have to.</p>
+    </div>
+    <div class="partners-grid">
+      <div class="partner-col">
+        <div class="partner-col-title">Project Sourcing</div>
+        <ul class="partner-items">
+          <li>10+ local developers per market</li>
+          <li>Proprietary grid analysis tooling</li>
+          <li>Community &amp; DSO networks</li>
+        </ul>
+      </div>
+      <div class="partner-col">
+        <div class="partner-col-title">Financing &amp; Insurance</div>
+        <ul class="partner-items">
+          <li>Major European project finance banks</li>
+          <li>Export credit &amp; DFI financing</li>
+          <li>Specialist energy insurers</li>
+        </ul>
+      </div>
+      <div class="partner-col">
+        <div class="partner-col-title">OEM Procurement</div>
+        <ul class="partner-items">
+          <li>CATL · Huawei</li>
+          <li>Hithium · Sungrow</li>
+          <li>Power electronics &amp; inverter OEMs</li>
+          <li>Direct factory procurement</li>
+        </ul>
+      </div>
+      <div class="partner-col">
+        <div class="partner-col-title">EPC Construction</div>
+        <ul class="partner-items">
+          <li>Leading European EPC contractors</li>
+          <li>Grid connection specialists</li>
+          <li>Civil &amp; electrical partners</li>
+        </ul>
+      </div>
+      <div class="partner-col">
+        <div class="partner-col-title">Asset Optimization</div>
+        <ul class="partner-items">
+          <li>AI dispatch platform (proprietary)</li>
+          <li>Enspired · Entrix</li>
+          <li>volytica diagnostics</li>
+          <li>Real-time market integration</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ───────────────────────────────────────────────────── -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <div class="section-label" style="justify-content:center">Get in Touch</div>
+      <h2>Ready to talk about<br><span class="teal">battery storage</span>?</h2>
+      <p>Whether you're a developer, investor, grid operator or potential partner — we'd love to hear from you.</p>
+      <div class="contact-links">
+        <a href="mailto:contact@equora.energy" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          contact@equora.energy
+        </a>
+        <a href="https://www.equora.energy" class="contact-link" target="_blank">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20"/></svg>
+          www.equora.energy
+        </a>
+      </div>
+      <p class="contact-loc">📍 Zug, Switzerland &nbsp;·&nbsp; Berlin, Germany</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ────────────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-inner">
+    <p>© 2026 Equora Energy. All rights reserved.</p>
+    <p class="footer-disc">Strictly private &amp; confidential. This document is intended solely for the addressee. Past performance is not indicative of future results. All figures are indicative.</p>
+  </div>
+</footer>
+
+</body>
+</html>
